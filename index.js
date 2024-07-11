@@ -55,23 +55,22 @@ async function sizeBase(){  //текущее количество персона
 async function fillTable() {
     try {
         const sizeTable = await sizeBase();
-        for (let numChar=1; numChar <= sizeTable; numChar ++){
-            let charArr = await axios.get("https://rickandmortyapi.com/api/character/" + numChar)
-            .then(response => {
-                let name = response.data.name;
-                let data = JSON.stringify(response.data);
-                return [name,data];
-            })
-            .catch(error => {
-                console.error("Error filling the table:",error.message);
-            })
-            await sendToBase(charArr);
-            console.log(`Character number ${numChar} has been loaded`);
+        const arrNumChar = [...Array(sizeTable)].map((_,i) => i + 1);
+        let AllCharArr = await axios.get("https://rickandmortyapi.com/api/character/"+arrNumChar)
+        .then(response => {
+            return response.data;
+        })
+        .catch(error => {
+            console.error("Error filling the table:",error.message);
+        })
+        for (let numChar=0; numChar<sizeTable; numChar++){
+            let name = AllCharArr[numChar].name;
+            let data = JSON.stringify(AllCharArr[numChar]);
+            await sendToBase([name,data]);
+            console.log(`Character number ${numChar+1} has been loaded`);
         }
     }catch (err) {
         console.error("Error fill the table:",err.message);
-    }finally{
-        console.log("Table was filled"+"\n")
     }
 }
 
