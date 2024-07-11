@@ -71,6 +71,8 @@ async function fillTable() {
         }
     }catch (err) {
         console.error("Error fill the table:",err.message);
+    }finally{
+        console.log("Table was filled"+"\n");
     }
 }
 
